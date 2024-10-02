@@ -5,47 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>계단 오르기 알고리즘</title>
     <style>
-      /* body에 Flexbox를 적용하여 중앙 정렬 */
       body {
         display: flex;
         justify-content: center;
-        align-items: flex-start; /* 좌측 정렬 */
+        align-items: flex-start;
         min-height: 100vh;
         font-family: Arial, sans-serif;
         margin: 0;
         background-color: #f0f0f0;
-        padding: 20px; /* 하단 여백 줄이기 */
+        padding: 20px;
       }
 
       h1 {
         margin-bottom: 10px;
       }
 
-      /* 문제와 해설을 각각 좌우로 배치하기 위한 레이아웃 */
       .content-wrapper {
         display: flex;
         justify-content: space-between;
         width: 100%;
-        max-width: 1200px; /* 최대 너비 설정 */
+        max-width: 1200px;
       }
 
-      /* 왼쪽 문제 설명 부분 */
       .problem-container {
         flex: 1;
         margin-right: 20px;
       }
 
-      /* 오른쪽 해설 부분 */
       .explanation-container {
         flex: 1;
       }
 
-      /* 계단을 화면의 중앙에 수평 정렬 */
       .stairs-container {
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        margin-bottom: 20px; /* 아래 여백 추가 */
+        margin-bottom: 20px;
       }
 
       .stair {
@@ -55,13 +50,12 @@
         align-items: center;
         justify-content: center;
         border: 1px solid black;
-        margin-right: 5px; /* 계단 간의 간격 줄이기 */
+        margin-right: 5px;
         color: black;
         font-weight: bold;
         text-align: center;
       }
 
-      /* 각 계단의 높이를 계단 번호에 따라 다르게 설정 */
       .stair:nth-child(1) {
         height: 50px;
       }
@@ -101,15 +95,13 @@
         background-color: #0056b3;
       }
 
-      /* 타이머 스타일 */
       .timer {
         font-size: 24px;
         font-weight: bold;
         color: #ff0000;
-        margin-left: 30px; /* 계단과 타이머 사이 간격 */
+        margin-left: 30px;
       }
 
-      /* 초기화 버튼 스타일 */
       .reset-button {
         margin-top: 10px;
         padding: 10px 20px;
@@ -125,16 +117,20 @@
         background-color: #c82333;
       }
 
-      /* DP 과정 스타일 */
       .dp-process {
         text-align: left;
-        margin-top: 15px;
-        white-space: pre-wrap; /* 줄바꿈 유지 */
+        margin-top: 5px;
+        white-space: pre-wrap;
       }
 
-      /* 게임 설명 영역 */
+      .dp-process ul {
+        text-align: left;
+        margin-top: 5px;
+        padding-left: 20px;
+      }
+
       #gameDescription {
-        display: none; /* 처음에는 숨김 */
+        display: none;
         margin-top: 20px;
         text-align: center;
       }
@@ -142,55 +138,75 @@
       #gameImage {
         max-width: 100%;
         height: auto;
-        display: none; /* 처음에는 숨김 */
       }
 
-      /* 문제와 해설을 나란히 표시하기 위한 CSS */
-      .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-
-      /* 화면 전체를 차지하도록 수정된 스타일 */
+      /* Fullscreen modal styles */
       .fullscreen {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        z-index: 1000;
         background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+      }
+
+      .fullscreen-content {
+        color: white;
+        text-align: center;
+        padding: 30px;
+      }
+
+      .close-button {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 30px;
+        background-color: transparent;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      .close-button:hover {
+        color: red;
       }
     </style>
   </head>
   <body>
     <div class="content-wrapper">
-      <!-- 문제 설명 -->
       <div class="problem-container">
         <h1>계단 오르기</h1>
 
-        <!-- 게임 설명 보기 버튼 -->
         <button onclick="toggleDescription()">게임 설명 보기</button>
 
-        <!-- 게임 설명 -->
-        <div id="gameDescription">
-          <h2>게임 설명</h2>
-          <p>
-            계단 오르기 게임은 아래의 규칙에 따라 계단을 올라 점수를 모으는
-            게임입니다.
-            <br />
-            각 계단에 쓰여 있는 점수가 주어질 때 이 게임에서 얻을 수 있는 총
-            점수의 최댓값을 구하시오.
-          </p>
-          <img
-            src="/static/image.png"
-            alt="게임 설명 이미지"
-            style="max-width: 100%; height: auto"
-          />
+        <!-- 게임 설명 fullscreen modal -->
+        <div
+          id="fullscreenDescription"
+          class="fullscreen"
+          style="display: none"
+        >
+          <div class="fullscreen-content">
+            <button class="close-button" onclick="toggleDescription()">
+              X
+            </button>
+            <h2>게임 설명</h2>
+            <p>
+              계단 오르기 게임은 아래의 규칙에 따라 계단을 올라 점수를 모으는
+              게임입니다.
+              <br />
+              각 계단에 쓰여 있는 점수가 주어질 때 이 게임에서 얻을 수 있는 총
+              점수의 최댓값을 구하시오.
+            </p>
+            <img
+              id="gameImage"
+              src="/static/image.png"
+              alt="게임 설명 이미지"
+            />
+          </div>
         </div>
 
         <div class="stairs-container">
@@ -199,29 +215,25 @@
           {% endfor %}
         </div>
 
-        <!-- 최댓값 확인 버튼 -->
-        <form method="POST">
+        <form method="POST" id="answerForm">
           <button type="submit">최댓값 확인</button>
         </form>
 
-        <!-- 초기화 버튼 -->
-        <form method="GET">
+        <form method="GET" id="resetForm">
           <button
             class="reset-button"
             type="submit"
             name="reset"
             value="1"
-            onclick="startTimer()"
+            onclick="resetGame()"
           >
             초기화
           </button>
         </form>
 
-        <!-- 타이머 -->
         <div class="timer" id="timer">60</div>
       </div>
 
-      <!-- 해설 부분 -->
       <div class="explanation-container">
         {% if result %}
         <h2>최댓값: {{ result }}</h2>
@@ -238,16 +250,18 @@
     </div>
 
     <script>
-      // 게임 설명을 표시하거나 숨기는 함수
+      // 게임 설명을 fullscreen으로 표시하거나 숨기는 함수
       function toggleDescription() {
-        const desc = document.getElementById("gameDescription");
-        if (desc.style.display === "none") {
-          desc.style.display = "block";
+        const desc = document.getElementById("fullscreenDescription");
+        if (desc.style.display === "none" || desc.style.display === "") {
+          desc.style.display = "flex"; // Show fullscreen
         } else {
-          desc.style.display = "none";
+          desc.style.display = "none"; // Hide fullscreen
         }
       }
 
+      // 타이머 설정 및 초기화 함수
+      // 40초 타이머 설정
       let timeLeft = 60;
       const timerElement = document.getElementById("timer");
 
