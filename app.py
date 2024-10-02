@@ -34,7 +34,7 @@ def stair_climbing_algorithm_with_explanation(stairs):
         dp[i] = max(option1, option2)
         explanation.append(
             f"{i}번째 계단:\n"
-            f"   - {i - 3}번째 계단의 최댓값 + {i - 2}번째 계단 점수+ {i}번째 계단 점수= {option1}\n"
+            f"   - {i - 3}번째 계단의 최댓값 + {i - 1}번째 계단 점수+ {i}번째 계단 점수= {option1}\n"
             f"   - {i - 2}번째 계단의 최댓값 + {i}번째 계단 점수 = {option2}\n"
             f"   - 선택된 최댓값: {option1} vs {option2} → {dp[i]}"
         )
