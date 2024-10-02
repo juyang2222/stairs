@@ -8,27 +8,36 @@
       /* body에 Flexbox를 적용하여 중앙 정렬 */
       body {
         display: flex;
-        flex-direction: column;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start; /* 좌측 정렬 */
         min-height: 100vh;
         font-family: Arial, sans-serif;
         margin: 0;
         background-color: #f0f0f0;
-        padding-bottom: 20px; /* 하단 여백 줄이기 */
+        padding: 20px; /* 하단 여백 줄이기 */
       }
 
       h1 {
         margin-bottom: 10px;
       }
 
-      /* 타이머와 계단을 함께 배치하는 컨테이너 */
-      .content-container {
-        margin-top: 20px;
+      /* 문제와 해설을 각각 좌우로 배치하기 위한 레이아웃 */
+      .content-wrapper {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 20px; /* 아래 여백 추가 */
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1200px; /* 최대 너비 설정 */
+      }
+
+      /* 왼쪽 문제 설명 부분 */
+      .problem-container {
+        flex: 1;
+        margin-right: 20px;
+      }
+
+      /* 오른쪽 해설 부분 */
+      .explanation-container {
+        flex: 1;
       }
 
       /* 계단을 화면의 중앙에 수평 정렬 */
@@ -36,7 +45,7 @@
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        margin-right: 30px; /* 타이머와의 간격 줄이기 */
+        margin-bottom: 20px; /* 아래 여백 추가 */
       }
 
       .stair {
@@ -97,7 +106,7 @@
         font-size: 24px;
         font-weight: bold;
         color: #ff0000;
-        margin-left: 30px; /* 계단과 타이머 사이 간격 줄이기 */
+        margin-left: 30px; /* 계단과 타이머 사이 간격 */
       }
 
       /* 초기화 버튼 스타일 */
@@ -129,65 +138,104 @@
         margin-top: 20px;
         text-align: center;
       }
+
+      #gameImage {
+        max-width: 100%;
+        height: auto;
+        display: none; /* 처음에는 숨김 */
+      }
+
+      /* 문제와 해설을 나란히 표시하기 위한 CSS */
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      /* 화면 전체를 차지하도록 수정된 스타일 */
+      .fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     </style>
   </head>
   <body>
-    <h1>계단 오르기</h1>
+    <div class="content-wrapper">
+      <!-- 문제 설명 -->
+      <div class="problem-container">
+        <h1>계단 오르기</h1>
 
-    <!-- 게임 설명 보기 버튼 -->
-    <button onclick="toggleDescription()">게임 설명 보기</button>
+        <!-- 게임 설명 보기 버튼 -->
+        <button onclick="toggleDescription()">게임 설명 보기</button>
 
-    <!-- 게임 설명 -->
-    <div id="gameDescription">
-      <h2>게임 설명</h2>
-      <p>
-        계단 오르기 게임은 아래의 규칙에 따라 계단을 올라 점수를 모으는
-        게임입니다.
-        <br />
-        각 계단에 쓰여 있는 점수가 주어질 때 이 게임에서 얻을 수 있는 총 점수의
-        최댓값을 구하시오.
-      </p>
-      <img
-        src="/static/image.png"
-        alt="게임 설명 이미지"
-        style="max-width: 100%; height: auto"
-      />
-    </div>
+        <!-- 게임 설명 -->
+        <div id="gameDescription">
+          <h2>게임 설명</h2>
+          <p>
+            계단 오르기 게임은 아래의 규칙에 따라 계단을 올라 점수를 모으는
+            게임입니다.
+            <br />
+            각 계단에 쓰여 있는 점수가 주어질 때 이 게임에서 얻을 수 있는 총
+            점수의 최댓값을 구하시오.
+          </p>
+          <img
+            src="/static/image.png"
+            alt="게임 설명 이미지"
+            style="max-width: 100%; height: auto"
+          />
+        </div>
 
-    <div class="content-container">
-      <div class="stairs-container">
-        {% for stair in stairs %}
-        <div class="stair">{{ stair }}</div>
-        {% endfor %}
+        <div class="stairs-container">
+          {% for stair in stairs %}
+          <div class="stair">{{ stair }}</div>
+          {% endfor %}
+        </div>
+
+        <!-- 최댓값 확인 버튼 -->
+        <form method="POST">
+          <button type="submit">최댓값 확인</button>
+        </form>
+
+        <!-- 초기화 버튼 -->
+        <form method="GET">
+          <button
+            class="reset-button"
+            type="submit"
+            name="reset"
+            value="1"
+            onclick="startTimer()"
+          >
+            초기화
+          </button>
+        </form>
+
+        <!-- 타이머 -->
+        <div class="timer" id="timer">60</div>
       </div>
 
-      <!-- 타이머 -->
-      <div class="timer" id="timer">60</div>
+      <!-- 해설 부분 -->
+      <div class="explanation-container">
+        {% if result %}
+        <h2>최댓값: {{ result }}</h2>
+        <div class="dp-process">
+          <h3 class="section-title">알고리즘 과정:</h3>
+          <ul>
+            {% for step in dp_process %}
+            <li>{{ step }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
     </div>
-
-    <!-- 최댓값 확인 버튼 -->
-    <form method="POST">
-      <button type="submit">최댓값 확인</button>
-    </form>
-
-    <!-- 초기화 버튼 -->
-    <form method="GET">
-      <button class="reset-button" type="submit" name="reset" value="1">
-        초기화
-      </button>
-    </form>
-
-    {% if result %}
-    <h2>최댓값: {{ result }}</h2>
-    <div class="dp-process">
-      <h3>알고리즘 과정:</h3>
-      <ul>
-        {% for step in dp_process %}
-        <li>{{ step }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
 
     <script>
       // 게임 설명을 표시하거나 숨기는 함수
@@ -200,7 +248,6 @@
         }
       }
 
-      // 40초 타이머 설정
       let timeLeft = 60;
       const timerElement = document.getElementById("timer");
 
