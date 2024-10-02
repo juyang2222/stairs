@@ -260,7 +260,7 @@
       }
 
       // 타이머 설정 및 초기화 함수
-      let timeLeft = 60;
+      let timeLeft = 30;
       const timerElement = document.getElementById("timer");
 
       const countdown = setInterval(function () {
@@ -280,7 +280,7 @@
 
       function resetGame() {
         document.getElementById("answerSection").style.display = "none"; // 답을 숨기기
-        timeLeft = 60; // 타이머 초기화
+        timeLeft = 30; // 타이머 초기화
         timerElement.textContent = timeLeft; // 타이머 화면 갱신
       }
     </script>
