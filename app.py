@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session
 import random
+import os
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # 세션을 위한 시크릿 키 설정
@@ -62,4 +63,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
