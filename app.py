@@ -40,14 +40,10 @@ def stair_climbing_algorithm_with_explanation(stairs):
             f"- 선택된 최댓값: {option1} vs {option2} → {dp[i]}\n"
         )
 
-        # explanation.append(f"   -{i}번째 계단
-
-        #                    선택된 최댓값: {option1} vs {option2} → {dp[i]}")
-
     return dp[n], explanation
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def index():
     result = None
     dp_process = []
@@ -55,12 +51,15 @@ def index():
     # 새로운 계단을 설정 (초기화되면 세션에 저장)
     if "stairs" not in session or request.args.get("reset"):
         stairs = [random.choice([5, 10, 15, 20, 25, 30]) for _ in range(6)]
-        session["stairs"] = stairs
-    else:
-        stairs = session["stairs"]
-
-    if request.method == "POST":
         result, dp_process = stair_climbing_algorithm_with_explanation(stairs)
+        session["stairs"] = stairs
+        session["result"] = result
+        session["dp_process"] = dp_process
+
+    # 세션에서 계단, 결과, 해설을 가져오기
+    stairs = session["stairs"]
+    result = session["result"]
+    dp_process = session["dp_process"]
 
     return render_template(
         "index.html", result=result, dp_process=dp_process, stairs=stairs

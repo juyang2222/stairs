@@ -215,9 +215,7 @@
           {% endfor %}
         </div>
 
-        <form method="POST" id="answerForm">
-          <button type="submit">최댓값 확인</button>
-        </form>
+        <button onclick="showAnswer()">최댓값 확인</button>
 
         <form method="GET" id="resetForm">
           <button
@@ -233,9 +231,11 @@
 
         <div class="timer" id="timer">60</div>
       </div>
-
-      <div class="explanation-container">
-        {% if result %}
+      <div
+        class="explanation-container"
+        id="answerSection"
+        style="display: none"
+      >
         <h2>최댓값: {{ result }}</h2>
         <div class="dp-process">
           <h3 class="section-title">알고리즘 과정:</h3>
@@ -245,7 +245,6 @@
             {% endfor %}
           </ul>
         </div>
-        {% endif %}
       </div>
     </div>
 
@@ -261,7 +260,6 @@
       }
 
       // 타이머 설정 및 초기화 함수
-      // 40초 타이머 설정
       let timeLeft = 60;
       const timerElement = document.getElementById("timer");
 
@@ -274,6 +272,17 @@
           timeLeft--;
         }
       }, 1000); // 1초마다 실행
+
+      function showAnswer() {
+        // 정답 섹션을 화면에 표시
+        document.getElementById("answerSection").style.display = "block";
+      }
+
+      function resetGame() {
+        document.getElementById("answerSection").style.display = "none"; // 답을 숨기기
+        timeLeft = 60; // 타이머 초기화
+        timerElement.textContent = timeLeft; // 타이머 화면 갱신
+      }
     </script>
   </body>
 </html>
