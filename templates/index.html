@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>계단 오르기 알고리즘</title>
+    <style>
+      /* body에 Flexbox를 적용하여 중앙 정렬 */
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f0f0f0;
+        padding-bottom: 20px; /* 하단 여백 줄이기 */
+      }
+
+      h1 {
+        margin-bottom: 10px;
+      }
+
+      /* 타이머와 계단을 함께 배치하는 컨테이너 */
+      .content-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px; /* 아래 여백 추가 */
+      }
+
+      /* 계단을 화면의 중앙에 수평 정렬 */
+      .stairs-container {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        margin-right: 30px; /* 타이머와의 간격 줄이기 */
+      }
+
+      .stair {
+        width: 50px;
+        background-color: lightgray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+        margin-right: 5px; /* 계단 간의 간격 줄이기 */
+        color: black;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      /* 각 계단의 높이를 계단 번호에 따라 다르게 설정 */
+      .stair:nth-child(1) {
+        height: 50px;
+      }
+
+      .stair:nth-child(2) {
+        height: 100px;
+      }
+
+      .stair:nth-child(3) {
+        height: 150px;
+      }
+
+      .stair:nth-child(4) {
+        height: 200px;
+      }
+
+      .stair:nth-child(5) {
+        height: 250px;
+      }
+
+      .stair:nth-child(6) {
+        height: 300px;
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      /* 타이머 스타일 */
+      .timer {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ff0000;
+        margin-left: 30px; /* 계단과 타이머 사이 간격 줄이기 */
+      }
+
+      /* 초기화 버튼 스타일 */
+      .reset-button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .reset-button:hover {
+        background-color: #c82333;
+      }
+
+      /* DP 과정 스타일 */
+      .dp-process {
+        text-align: left;
+        margin-top: 15px;
+        white-space: pre-wrap; /* 줄바꿈 유지 */
+      }
+
+      /* 게임 설명 영역 */
+      #gameDescription {
+        display: none; /* 처음에는 숨김 */
+        margin-top: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>계단 오르기</h1>
+
+    <!-- 게임 설명 보기 버튼 -->
+    <button onclick="toggleDescription()">게임 설명 보기</button>
+
+    <!-- 게임 설명 -->
+    <div id="gameDescription">
+      <h2>게임 설명</h2>
+      <p>
+        계단 오르기 게임은 아래의 규칙에 따라 계단을 올라 점수를 모으는
+        게임입니다.
+      </p>
+      <img
+        src="/static/image.png"
+        alt="게임 설명 이미지"
+        style="max-width: 100%; height: auto"
+      />
+    </div>
+
+    <div class="content-container">
+      <div class="stairs-container">
+        {% for stair in stairs %}
+        <div class="stair">{{ stair }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- 타이머 -->
+      <div class="timer" id="timer">60</div>
+    </div>
+
+    <!-- 최댓값 확인 버튼 -->
+    <form method="POST">
+      <button type="submit">최댓값 확인</button>
+    </form>
+
+    <!-- 초기화 버튼 -->
+    <form method="GET">
+      <button class="reset-button" type="submit" name="reset" value="1">
+        초기화
+      </button>
+    </form>
+
+    {% if result %}
+    <h2>최댓값: {{ result }}</h2>
+    <div class="dp-process">
+      <h3>알고리즘 과정:</h3>
+      <ul>
+        {% for step in dp_process %}
+        <li>{{ step }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <script>
+      // 게임 설명을 표시하거나 숨기는 함수
+      function toggleDescription() {
+        const desc = document.getElementById("gameDescription");
+        if (desc.style.display === "none") {
+          desc.style.display = "block";
+        } else {
+          desc.style.display = "none";
+        }
+      }
+
+      // 40초 타이머 설정
+      let timeLeft = 60;
+      const timerElement = document.getElementById("timer");
+
+      const countdown = setInterval(function () {
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          timerElement.textContent = "시간 종료";
+        } else {
+          timerElement.textContent = timeLeft;
+          timeLeft--;
+        }
+      }, 1000); // 1초마다 실행
+    </script>
+  </body>
+</html>
