@@ -50,7 +50,7 @@ def index():
 
     # 새로운 계단을 설정 (초기화되면 세션에 저장)
     if "stairs" not in session or request.args.get("reset"):
-        stairs = [random.choice([5, 10, 15, 20, 25, 30]) for _ in range(6)]
+        stairs = [random.choice([10, 15, 20, 25]) for _ in range(6)]
         result, dp_process = stair_climbing_algorithm_with_explanation(stairs)
         session["stairs"] = stairs
         session["result"] = result
