@@ -14,17 +14,17 @@ def stair_climbing_algorithm_with_explanation(stairs):
 
     # 첫 번째 계단
     dp[1] = stairs[0]
-    explanation.append(f"첫 번째 계단:\n   - 첫 번째 계단 점수 = {stairs[0]}")
+    explanation.append(f"1 번째 계단:\n   - 1 번째 계단 점수 = {stairs[0]}")
 
     if n > 1:
         dp[2] = stairs[0] + stairs[1]
-        explanation.append(f"두 번째 계단:\n   - 두 번째 계단 점수 = {dp[2]}")
+        explanation.append(f"2 번째 계단:\n   - 2 번째 계단 점수 = {dp[2]}")
 
     if n > 2:
         dp[3] = max(stairs[0] + stairs[2], stairs[1] + stairs[2])
         explanation.append(
-            f"세 번째 계단:\n   - 첫 번째 계단 점수 + 세 번째 계단 점수 = {stairs[0] + stairs[2]}\n"
-            f"   - 두 번째 계단 점수 + 세 번째 계단 점수 = {stairs[1] + stairs[2]}\n"
+            f"1 번째 계단:\n   - 1 번째 계단 점수 + 3 번째 계단 점수 = {stairs[0] + stairs[2]}\n"
+            f"   - 2 번째 계단 점수 + 3 번째 계단 점수 = {stairs[1] + stairs[2]}\n"
             f"   - 선택된 최댓값: {stairs[0] + stairs[2]} vs {stairs[1] + stairs[2]} → {dp[3]}"
         )
 
