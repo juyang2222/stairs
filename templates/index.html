@@ -198,8 +198,10 @@
               계단 오르기 게임은 아래의 규칙에 따라 계단을 올라 점수를 모으는
               게임입니다.
               <br />
-              각 계단에 쓰여 있는 점수가 주어질 때 이 게임에서 얻을 수 있는 총
-              점수의 최댓값을 구하시오.
+              각 계단이 마지막 계단일 때 해당 계단에서 얻을 수 있는 최댓값을
+              구하세요.
+              <br />
+              아래 게임의 예시 답안: 10,30,35,55,65,75
             </p>
             <img
               id="gameImage"
@@ -229,7 +231,7 @@
           </button>
         </form>
 
-        <div class="timer" id="timer">30</div>
+        <div class="timer" id="timer">60</div>
       </div>
       <div
         class="explanation-container"
@@ -260,7 +262,7 @@
       }
 
       // 타이머 설정 및 초기화 함수
-      let timeLeft = 30;
+      let timeLeft = 60;
       const timerElement = document.getElementById("timer");
 
       const countdown = setInterval(function () {
@@ -280,7 +282,7 @@
 
       function resetGame() {
         document.getElementById("answerSection").style.display = "none"; // 답을 숨기기
-        timeLeft = 30; // 타이머 초기화
+        timeLeft = 60; // 타이머 초기화
         timerElement.textContent = timeLeft; // 타이머 화면 갱신
       }
     </script>
