@@ -11,7 +11,7 @@ def stair_climbing_algorithm_with_explanation(stairs):
     n = len(stairs)
     dp = [0] * (n + 1)
     explanation = []  # 각 계단별 설명을 담을 리스트
-
+    result = []
     # 첫 번째 계단
     dp[1] = stairs[0]
     explanation.append(f"1 번째 계단:\n   - 1 번째 계단 점수 = {stairs[0]}")
@@ -40,12 +40,15 @@ def stair_climbing_algorithm_with_explanation(stairs):
             f"- 선택된 최댓값: {option1} vs {option2} → {dp[i]}\n"
         )
 
-    return dp[n], explanation
+    for j in range(1, n + 1):
+        result.append(dp[j])
+
+    return result, explanation
 
 
 @app.route("/", methods=["GET"])
 def index():
-    result = None
+    result = []
     dp_process = []
 
     # 새로운 계단을 설정 (초기화되면 세션에 저장)

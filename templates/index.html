@@ -217,7 +217,7 @@
           {% endfor %}
         </div>
 
-        <button onclick="showAnswer()">최댓값 확인</button>
+        <button onclick="showAnswer()">정답 확인</button>
 
         <form method="GET" id="resetForm">
           <button
@@ -238,7 +238,7 @@
         id="answerSection"
         style="display: none"
       >
-        <h2>최댓값: {{ result }}</h2>
+        <h2>정답: {{ result | join(', ') }}</h2>
         <div class="dp-process">
           <h3 class="section-title">알고리즘 과정:</h3>
           <ul>
