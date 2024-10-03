@@ -42,6 +42,7 @@ def stair_climbing_algorithm_with_explanation(stairs):
 
     for j in range(1, n + 1):
         result.append(dp[j])
+    result = [str(item) for item in result]
 
     return result, explanation
 
